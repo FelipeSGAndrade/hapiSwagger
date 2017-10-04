@@ -9,10 +9,10 @@ const generateToken = {
         notes: 'Generate user token through email and password',
         handler: (request, reply) => UserController.guest(request, reply),
         validate: {
-            payload: GenerateTokenViewModel.request
+            //payload: GenerateTokenViewModel.request
         },
         response: {
-            schema: GenerateTokenViewModel.response
+            //schema: GenerateTokenViewModel.response
         }
     }
 };
