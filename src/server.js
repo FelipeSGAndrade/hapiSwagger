@@ -1,19 +1,26 @@
 'use strict';
 
-const _ = require('lodash');
-const Plugins = require('./config/plugins');
-const Config = require('./config/config');
 const Hapi = require('hapi');
-//const UserService = require('./user/service');
-const Routes = require('./routes');
+const UserRoutes = require('./resources/user/userRoute');
+
+const Good = require('./plugins/good');
+const Swagger = require('./plugins/swagger');
+const SwaggerUi = require('./plugins/swagger-ui');
 
 const server = new Hapi.Server();
 
 server.connection({
-    host: Config.server.host,
-    port: Config.server.port,
-    labels: ['api']
+    host: 'localhost',
+    port: 8000
 });
+
+const Plugins = [
+    Good,
+    require('inert'),
+    require('vision'),
+    Swagger,
+    SwaggerUi
+];
 
 server.register(Plugins, (err) => {
 
@@ -22,26 +29,13 @@ server.register(Plugins, (err) => {
     }
 });
 
-server.auth.strategy('token', 'jwt', {
-    key: Config.security.key,
-    verifyOptions: {
-        maxAge: Config.security.maxAge,
-        algorithms: [
-            Config.security.algorithm
-        ]
-    }
-});
-
-_.each(Routes.getRoutes(), (route) => {
-
-    server.route(route);
-});
+server.route(UserRoutes);
 
 const start = () => {
 
     server.start(() => {
 
-        server.log('info', 'server running at: ' + server.info.uri + ' using environment: ' + Config.getEnvironment());
+        server.log('info', 'server running at: ' + server.info.uri + ' using environment: ' + process.env.NODE_ENV);
     });
 
 };

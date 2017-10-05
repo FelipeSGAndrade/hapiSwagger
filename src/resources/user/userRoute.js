@@ -1,18 +1,18 @@
 'use strict'
 
+const joi = require('joi');
+
 const generateToken = {
-    path: '/v1/user',
+    path: '/v1/user/token',
     method: 'POST',
     config: {
-        tags: ['api'],
-        description: 'Generate user token through email and password',
-        notes: 'Generate user token through email and password',
-        handler: (request, reply) => UserController.guest(request, reply),
-        validate: {
-            //payload: GenerateTokenViewModel.request
-        },
-        response: {
-            //schema: GenerateTokenViewModel.response
+        tags: ['api', 'users'],
+        description: 'Login por email e password',
+        notes: 'Retorna um token de acesso para o usuário',
+        handler: (request, reply) => {
+            reply({
+                token: 'string'
+            })
         }
     }
 };
